@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Builder</title>
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+
+    <div>
+        <div class="cat-preview">
+            <h1>Canvas Cat Builder</h1>
+            <canvas id="cat-preview-canvas"></canvas>
+        </div>
+
+        <div class="cat-param">
+            <div class="param-input">
+                <label for="head_width">Head Width</label>
+                <input type="range" min="50" max="300" value="120" id="head_width" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="head_height">Head Height</label>
+                <input type="range" min="50" max="200" value="80" id="head_height" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="head_height">Head Arc</label>
+                <input type="range" min="0" max="100" value="80" id="head_arc" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="head_color">Face Color</label>
+                <input type="color" value="#000000" id="head_color" onchange="generateCat()">
+            </div>
+
+            <hr>
+
+            <div class="param-input">
+                <label for="ear_width">Ear Width</label>
+                <input type="range" min="0" max="50" value="20" id="ear_width" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="ear_height">Ear Height</label>
+                <input type="range" min="0" max="100" value="20" id="ear_height" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="ear_direction">Ear Angle</label>
+                <input type="range" min="0" max="100" value="20" id="ear_direction" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="ear_offset">Ear Align</label>
+                <input type="range" min="0" max="100" value="30" id="ear_offset" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="ear_color">Ear Color</label>
+                <input type="color" value="#a1a1a1" id="ear_color" onchange="generateCat()">
+            </div>
+
+            <hr>
+
+            <div class="param-input">
+                <label for="eye_height">Eye Height</label>
+                <input type="range" min="0" max="90" value="30" id="eye_height" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="eye_width">Eye Width</label>
+                <input type="range" min="0" max="50" value="40" id="eye_width" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="eye_distance">Eye Between</label>
+                <input type="range" min="0" max="100" value="40" id="eye_distance" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="eye_margin_top">Eye Align</label>
+                <input type="range" min="0" max="100" value="50" id="eye_margin_top" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="eye_color">Eye Color</label>
+                <input type="color" value="#ffffff" id="eye_color" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="retina_height">Iris Height</label>
+                <input type="range" min="0" max="50" value="45" id="retina_height" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="retina_width">Iris Width</label>
+                <input type="range" min="0" max="50" value="15" id="retina_width" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="retina_color">Iris Color</label>
+                <input type="color" value="#000000" id="retina_color" onchange="generateCat()">
+            </div>
+
+            <hr>
+
+            <div class="param-input">
+                <label for="neck_length">Neck Length</label>
+                <input type="range" min="0" max="200" value="10" id="neck_length" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="neck_width">Neck Width</label>
+                <input type="range" min="1" max="100" value="10" id="neck_width" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="neck_color">Neck Color</label>
+                <input type="color" value="#ffffff" id="neck_color" onchange="generateCat()">
+            </div>
+
+
+            <hr>
+
+            <div class="param-input">
+                <label for="body_width">Body Width</label>
+                <input type="range" min="40" max="300" value="80" id="body_width" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="body_height">Body Height</label>
+                <input type="range" min="40" max="300" value="120" id="body_height" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="body_arc">Body Arc</label>
+                <input type="range" min="1" max="100" value="100" id="body_arc" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="body_color">Body Color</label>
+                <input type="color" value="#a1a1a1" id="body_color" onchange="generateCat()">
+            </div>
+
+            <hr>
+
+            <div class="param-input">
+                <label for="tail_height">Tail Length</label>
+                <input type="range" min="20" max="120" value="80" id="tail_height" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="tail_stroke">Tail Width</label>
+                <input type="range" min="1" max="10" value="4" id="tail_stroke" onchange="generateCat()">
+            </div>
+
+            <div class="param-input">
+                <label for="tail_color">Tail Color</label>
+                <input type="color" value="#000000" id="tail_color" onchange="generateCat()">
+            </div>
+
+            
+        </div>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="catBuilder.js"></script>
+    <script>
+        function generateCat(){
+
+            var catJSON = {
+                "head_width": parseInt($("#head_width").val()),
+                "head_height": parseInt($("#head_height").val()), 
+                "head_arc": parseFloat($("#head_arc").val()) / 100,
+                "ear_width": parseFloat($("#ear_width").val()) / 100,
+                "ear_height": parseInt($("#ear_height").val()), 
+                "ear_direction": parseFloat($("#ear_direction").val()) / 100,
+                "ear_offset": parseFloat($("#ear_offset").val()) / 100,
+                "eye_height": parseFloat($("#eye_height").val()) / 100, // max: 1 
+                "eye_width": parseFloat($("#eye_width").val()) / 100, // max: 0.5
+                "eye_distance": parseFloat($("#eye_distance").val()) / 100, // max: 1
+                "eye_margin_top": parseFloat($("#eye_margin_top").val()) / 100, // max: 1
+                "retina_width": parseFloat($("#retina_width").val()) / 100,    // max: 0.5
+                "retina_height": parseFloat($("#retina_height").val()) / 100,   // max: 0.5
+                "neck_length": parseFloat($("#neck_length").val()) / 100, // max:2
+                "neck_width": parseFloat($("#neck_width").val()) / 100, // max: 1
+                "body_height": parseInt($("#body_height").val()),
+                "body_width": parseInt($("#body_width").val()),
+                "body_arc": parseFloat($("#body_arc").val()) / 100,
+                "tail_height": parseInt($("#tail_height").val()),
+                "tail_width": 20,
+                "tail_stroke": parseInt($("#tail_stroke").val()),
+                "ear_color": $("#ear_color").val(),
+                "head_color": $("#head_color").val(),
+                "eye_color": $("#eye_color").val(),
+                "retina_color": $("#retina_color").val(),
+                "neck_color": $("#neck_color").val(),
+                "body_color": $("#body_color").val(),
+                "tail_color": $("#tail_color").val(),
+            }
+
+            draw("cat-preview-canvas", catJSON)
+        }
+
+        generateCat()
+    </script>
+</body>
+</html>
