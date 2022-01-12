@@ -6,8 +6,15 @@ html, body, div, h1, h2, canvas{
 
 h1{
     width: 100%;
-    padding: 10px 0;
     text-align: center;
+    line-height: 50px;
+    font-size: 25px;
+}
+
+img{
+    height: 40px;
+    position: relative;
+    top: 10px;
 }
 
 .cat-preview{

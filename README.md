@@ -2,7 +2,7 @@
 A canvas-based 2D cat generator.
 
 ## Live Demo
-
+https://ai8hyf.github.io/html-canvas-cat-generator/
 
 ## Usage
 Include the following libraries:
@@ -14,7 +14,7 @@ Include the following libraries:
 
 To generate a cat, you need to pass the target canvas (like "#cat-container") and the following object (Json) to the **draw()** function:
 
-```json
+```
 let catObj = {
     "head_width": 50 ~ 300 (int),
     "head_height": 50 ~ 200 (int), 
