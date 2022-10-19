@@ -1,0 +1,103 @@
+html, body, div, h1, h2, canvas{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+h1{
+    width: 100%;
+    text-align: center;
+    line-height: 50px;
+    font-size: 25px;
+}
+
+img{
+    height: 40px;
+    position: relative;
+    top: 10px;
+}
+
+.cat-preview{
+    width: 100%;
+    background-color: white;
+    position: sticky;
+    top: 0;
+}
+
+#cat-preview-canvas, img, #start-btn{
+    height: 600px;
+    width: 100%;
+    max-width: 600px;
+    display: block;
+    margin: 0 auto;
+    border: none;
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+}
+
+.expand{
+    transform: scale(8,8);
+    transition: all 12s;
+    background-color: red;
+
+}
+
+.cat-param{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.param-input{
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    height: 36px;
+}
+
+label{
+    display: inline-block;
+    width: 120px;
+}
+
+hr{
+    width: 100%;
+    max-width: 400px;
+}
+
+#feed-button{
+    height: 50px; width: 50px; background-color: white; color: black; border-radius: 100%; border: 2px solid black; position: absolute; left: 10px; bottom: 10px; z-index: 999;
+}
+
+#feed-button:hover{
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.explosion {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    pointer-events: none;
+  }
+  .explosion .particle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    animation: pop .5s reverse forwards;
+  }
+  
+  @keyframes pop {
+    from {
+      opacity: 0;
+    }
+    to {
+      top: 50%;
+      left: 50%;
+      opacity: 1;
+    }
+  }

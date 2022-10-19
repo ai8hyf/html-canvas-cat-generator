@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100vh;">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adopt A Cat</title>
+    <link rel="stylesheet" href="demo2.css">
+</head>
+<body>
+
+    <div>
+        <div class="cat-preview" style="margin-top: 140px;">
+            <button id="start-btn" onclick="start_game()">Adopt a Cat</button>
+            <canvas id="cat-preview-canvas" style="border: none; display: none;"></canvas>
+            <p style="width: 100%; text-align: center; font-family: 'Courier New', Courier, monospace; font-weight: normal; font-size: 30px;">Feed the cat before <br>IT TURNS <span style="color: red; font-weight: bolder;">RED!</span></p>
+        </div>
+
+        <button id="feed-button">Feed</button>
+
+    </div>
+
+    <audio id="audio" src="cat.ogg" autostart="false" loop="true" hidden></audio>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="catBuilder.js"></script>
+    <script src="exp.js"></script>
+    <script>
+        var needPet = false
+        var failed = false
+        var explosion = false
+
+        function start_game(){
+            $("#start-btn").hide()
+            $("canvas").fadeIn(1000)
+            generateCat2()
+        }
+
+        var sound = document.getElementById("audio");
+
+        function playsound(sound_volume){
+            sound.play();
+            sound.volume = sound_volume;
+        }
+
+        function stopsound(){
+            sound.pause();
+        }
+
+        $("#feed-button").hide()
+
+        let catObj1 = {
+            "head_width": getRndInteger(50,200),
+            "head_height": getRndInteger(50,200), 
+            "head_arc": getRndFloat(0,100),
+            "ear_width": getRndFloat(0,50),
+            "ear_height": getRndInteger(0,100), 
+            "ear_direction": getRndFloat(0,100),
+            "ear_offset": getRndFloat(0,100),
+            "eye_height": getRndFloat(0,100),
+            "eye_width": getRndFloat(0,50),
+            "eye_distance": getRndFloat(0,100),
+            "eye_margin_top": getRndFloat(0,100),
+            "retina_width": getRndFloat(0,50),
+            "retina_height": getRndFloat(0,50),
+            "neck_length": getRndFloat(0,200),
+            "neck_width": getRndFloat(0,100),
+            "body_height": getRndInteger(50,300),
+            "body_width": getRndInteger(50,300),
+            "body_arc": getRndFloat(0,100),
+            "tail_height": getRndInteger(20,120),
+            "tail_width": 20,
+            "tail_stroke": getRndInteger(2,10),
+            "ear_color": getRndRGB(),
+            "head_color": getRndRGB(),
+            "eye_color": getRndRGB(),
+            "retina_color": getRndRGB(),
+            "neck_color": getRndRGB(),
+            "body_color": getRndRGB(),
+            "tail_color": getRndRGB(),
+        }
+
+        let catObj2 = {
+            "head_width": getRndInteger(50,200),
+            "head_height": getRndInteger(50,200), 
+            "head_arc": getRndFloat(0,100),
+            "ear_width": getRndFloat(0,50),
+            "ear_height": getRndInteger(0,100), 
+            "ear_direction": getRndFloat(0,100),
+            "ear_offset": getRndFloat(0,100),
+            "eye_height": getRndFloat(0,100),
+            "eye_width": getRndFloat(0,50),
+            "eye_distance": getRndFloat(0,100),
+            "eye_margin_top": getRndFloat(0,100),
+            "retina_width": getRndFloat(0,50),
+            "retina_height": getRndFloat(0,50),
+            "neck_length": getRndFloat(0,200),
+            "neck_width": getRndFloat(0,100),
+            "body_height": getRndInteger(50,300),
+            "body_width": getRndInteger(50,300),
+            "body_arc": getRndFloat(0,100),
+            "tail_height": getRndInteger(20,120),
+            "tail_width": 20,
+            "tail_stroke": getRndInteger(2,10),
+            "ear_color": getRndRGB(),
+            "head_color": getRndRGB(),
+            "eye_color": getRndRGB(),
+            "retina_color": getRndRGB(),
+            "neck_color": getRndRGB(),
+            "body_color": getRndRGB(),
+            "tail_color": getRndRGB(),
+        }
+
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) ) + min;
+        }
+
+        function getRndFloat(min, max){
+            let rnd_float = parseFloat(getRndInteger(min, max))/100
+            return rnd_float
+        }
+
+        function getRndColor(){
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function getRndRGB(){
+            let r = getRndInteger(0,255)
+            let g = getRndInteger(0,255)
+            let b = getRndInteger(0,255)
+            return "rgb("+r.toString()+","+g.toString()+","+b.toString()+")"
+        }
+
+        function findInterval(start_obj, end_obj, cur_frame, fps, attribute){
+            let intv = 0
+
+            if(start_obj[attribute]<end_obj[attribute]){
+                intv = (end_obj[attribute]-start_obj[attribute])/fps
+            }else{
+                intv = -(start_obj[attribute]-end_obj[attribute])/fps
+            }
+
+            return start_obj[attribute] + intv*cur_frame
+        }
+
+        function findColorInterval(start_obj, end_obj, cur_frame, fps, attribute){
+
+            if(cur_frame == fps){
+                return end_obj[attribute]
+            }
+
+            let intv = [0,0,0]
+            let rgb = [0,0,0]
+
+            let parsedStartColor = (start_obj[attribute].slice(4,-1)).split(",")
+            let parsedEndColor = (end_obj[attribute].slice(4,-1)).split(",")
+
+            for(let i=0;i<3;i++){
+                parsedStartColor[i] = parseInt(parsedStartColor[i])
+                parsedEndColor[i] = parseInt(parsedEndColor[i])
+
+                if(parsedStartColor[i]<parsedEndColor[i]){
+                    intv[i] = (parsedEndColor[i]-parsedStartColor[i])/fps
+                }else{
+                    intv[i] = -(parsedStartColor[i]-parsedEndColor[i])/fps
+                }
+
+                rgb[i] = parsedStartColor[i] + parseInt(intv[i])*cur_frame
+            }
+
+            return "rgb("+rgb[0].toString()+","+rgb[1].toString()+","+rgb[2].toString()+")"
+        }
+
+        
+
+        function generateCat2(){
+
+            let i = 1
+            let speed = 3
+            let fps = 30 * speed
+
+            let startGameInterval = setInterval(function(){
+                let catObjTemp = {
+                    "head_width": findInterval(catObj1, catObj2, i, fps, "head_width"),
+                    "head_height": findInterval(catObj1, catObj2, i, fps, "head_height"), 
+                    "head_arc": findInterval(catObj1, catObj2, i, fps, "head_arc"),
+                    "ear_width": findInterval(catObj1, catObj2, i, fps, "ear_width"),
+                    "ear_height": findInterval(catObj1, catObj2, i, fps, "ear_height"), 
+                    "ear_direction": findInterval(catObj1, catObj2, i, fps, "ear_direction"),
+                    "ear_offset": findInterval(catObj1, catObj2, i, fps, "ear_offset"),
+                    "eye_height": findInterval(catObj1, catObj2, i, fps, "eye_height"),
+                    "eye_width": findInterval(catObj1, catObj2, i, fps, "eye_width"),
+                    "eye_distance": findInterval(catObj1, catObj2, i, fps, "eye_distance"),
+                    "eye_margin_top": findInterval(catObj1, catObj2, i, fps, "eye_margin_top"),
+                    "retina_width": findInterval(catObj1, catObj2, i, fps, "retina_width"),
+                    "retina_height": findInterval(catObj1, catObj2, i, fps, "retina_height"),
+                    "neck_length": findInterval(catObj1, catObj2, i, fps, "neck_length"),
+                    "neck_width": findInterval(catObj1, catObj2, i, fps, "neck_width"),
+                    "body_height": findInterval(catObj1, catObj2, i, fps, "body_height"),
+                    "body_width": findInterval(catObj1, catObj2, i, fps, "body_width"),
+                    "body_arc": findInterval(catObj1, catObj2, i, fps, "body_arc"),
+                    "tail_height": findInterval(catObj1, catObj2, i, fps, "tail_height"),
+                    "tail_width": 20,
+                    "tail_stroke": findInterval(catObj1, catObj2, i, fps, "tail_stroke"),
+                    "ear_color": findColorInterval(catObj1, catObj2, i, fps, "ear_color"),
+                    "head_color": findColorInterval(catObj1, catObj2, i, fps, "head_color"),
+                    "eye_color": findColorInterval(catObj1, catObj2, i, fps, "eye_color"),
+                    "retina_color": findColorInterval(catObj1, catObj2, i, fps, "retina_color"),
+                    "neck_color": findColorInterval(catObj1, catObj2, i, fps, "neck_color"),
+                    "body_color": findColorInterval(catObj1, catObj2, i, fps, "body_color"),
+                    "tail_color": findColorInterval(catObj1, catObj2, i, fps, "tail_color"),
+                }
+
+                if(needPet==true){
+                    playsound(i/(fps))
+                }else{
+                    stopsound()
+                }
+
+                if(failed == true){
+                    catObjTemp["ear_color"] = "rgb(255,0,0)"
+                    catObjTemp["head_color"] = "rgb(255,0,0)"
+                    catObjTemp["eye_color"] = "rgb(255,0,0)"
+                    catObjTemp["retina_color"] = "rgb(255,0,0)"
+                    catObjTemp["neck_color"] = "rgb(255,0,0)"
+                    catObjTemp["body_color"] = "rgb(255,0,0)"
+                    catObjTemp["tail_color"] = "rgb(255,0,0)"
+                    explosion = true
+                    finalStage()
+                    
+                    console.log("interval cleared")
+
+                    clearInterval(startGameInterval)
+                    
+                    return 0
+                }
+
+                draw("cat-preview-canvas", catObjTemp)
+
+                i++
+
+                if(i>fps){
+                    i = 1
+                    catObj1 = catObjTemp
+
+                    catObj2 = {
+                        "head_width": getRndInteger(50,200),
+                        "head_height": getRndInteger(50,200), 
+                        "head_arc": getRndFloat(0,100),
+                        "ear_width": getRndFloat(0,50),
+                        "ear_height": getRndInteger(0,100), 
+                        "ear_direction": getRndFloat(0,100),
+                        "ear_offset": getRndFloat(0,100),
+                        "eye_height": getRndFloat(10,100),
+                        "eye_width": getRndFloat(10,50),
+                        "eye_distance": getRndFloat(0,100),
+                        "eye_margin_top": getRndFloat(0,100),
+                        "retina_width": getRndFloat(0,50),
+                        "retina_height": getRndFloat(0,50),
+                        "neck_length": getRndFloat(0,200),
+                        "neck_width": 20*getRndFloat(0,4),
+                        "body_height": getRndInteger(50,300),
+                        "body_width": getRndInteger(50,300),
+                        "body_arc": getRndFloat(0,100),
+                        "tail_height": getRndInteger(20,120),
+                        "tail_width": 20,
+                        "tail_stroke": getRndInteger(2,10),
+                        "ear_color": getRndRGB(),
+                        "head_color": getRndRGB(),
+                        "eye_color": getRndRGB(),
+                        "retina_color": getRndRGB(),
+                        "neck_color": getRndRGB(),
+                        "body_color": getRndRGB(),
+                        "tail_color": getRndRGB(),
+                    }
+
+                    if(needPet == true){
+                        console.log("failed!")
+                        failed = true
+                    }
+
+                    if(failed == true){
+                        catObj2["ear_color"] = "rgb(255,0,0)"
+                        catObj2["head_color"] = "rgb(255,0,0)"
+                        catObj2["eye_color"] = "rgb(255,0,0)"
+                        catObj2["retina_color"] = "rgb(255,0,0)"
+                        catObj2["neck_color"] = "rgb(255,0,0)"
+                        catObj2["body_color"] = "rgb(255,0,0)"
+                        catObj2["tail_color"] = "rgb(255,0,0)"
+
+                        $("#feed-button").hide()
+                        explosion = true
+                        finalStage()
+
+                        clearInterval(startGameInterval)
+                        return 0
+                    }
+
+                    // here controls the chance of turning red
+                    // in the future, the random algorithm should be more sophisticated and consider sequential information
+                    if((getRndInteger(1,2) == 2)&&failed==false&&needPet==false){
+                        catObj2["ear_color"] = "rgb(255,0,0)"
+                        catObj2["head_color"] = "rgb(255,0,0)"
+                        catObj2["eye_color"] = "rgb(255,0,0)"
+                        catObj2["retina_color"] = "rgb(255,0,0)"
+                        catObj2["neck_color"] = "rgb(255,0,0)"
+                        catObj2["body_color"] = "rgb(255,0,0)"
+                        catObj2["tail_color"] = "rgb(255,0,0)"
+
+                        console.log("boom!")
+
+                        // play some disturbing sound effects
+                        // WIP...
+
+                        // change the tag
+                        needPet = true
+
+                        // button shows up at a random location and opacity
+                        $("#feed-button").css("left", getRndInteger(0,80)+"vw")
+                        $("#feed-button").css("bottom", getRndInteger(0,80)+"vh")
+                        $("#feed-button").css("opacity", getRndFloat(30,80))
+                        $("#feed-button").show()
+                    }
+
+                }
+            }, 1000*speed/fps)
+        }
+
+        
+
+        $("#feed-button").click(function(){
+            // Stop it from turning red
+            needPet = false
+            failed = false
+
+            $("#feed-button").hide()
+
+            stopsound()
+
+            // now it turns white
+            catObj2["ear_color"] = "rgb(255,255,255)"
+            catObj2["head_color"] = "rgb(255,255,255)"
+            catObj2["eye_color"] = "rgb(255,255,255)"
+            catObj2["retina_color"] = "rgb(255,255,255)"
+            catObj2["neck_color"] = "rgb(255,255,255)"
+            catObj2["body_color"] = "rgb(255,255,255)"
+            catObj2["tail_color"] = "rgb(255,255,255)"
+        })
+
+        function convertCanvasToImage() {
+            let canvas = document.getElementById("cat-preview-canvas");
+            let image = new Image();
+            image.src = canvas.toDataURL();
+            return image;
+        }
+
+        function finalStage(){
+
+            // the cat will explode
+
+            let pnGImage = convertCanvasToImage();
+            $(".cat-preview").append(pnGImage);
+
+            $("#cat-preview-canvas").hide()
+            $("p").hide()
+
+            stopsound()
+
+            var target = $("img");
+
+            function explode() {
+                target.explodeRestore();
+                setTimeout(function () {
+                    target.explode({
+                        minWidth: 10,
+                        maxWidth: 20,
+                        radius: 800,
+                        release: false,
+                        recycle: false,
+                        explodeTime: 1000,
+                        canvas: true,
+                        round: false,
+                        maxAngle: 800,
+                        gravity: 10,
+                        groundDistance: 600,
+                    });
+                }, 1000)
+            }
+            explode();
+        }
+
+//click event listener
+$('button').on('click', function(e) {
+  explode(e.pageX, e.pageY, 100);
+})
+
+// explosion construction
+function explode(x, y, ptc) {
+  var particles = ptc,
+    // explosion container and its reference to be able to delete it on animation end
+    explosion = $('<div class="explosion"></div>');
+
+  // put the explosion container into the body to be able to get it's size
+  $('body').append(explosion);
+
+  // position the container to be centered on click
+  explosion.css('left', x - explosion.width() / 2);
+  explosion.css('top', y - explosion.height() / 2);
+
+  for (var i = 0; i < particles; i++) {
+    // positioning x,y of the particle on the circle (little randomized radius)
+    var x = (explosion.width() / 2) + rand(80, 150) * Math.cos(2 * Math.PI * i / rand(particles - 10, particles + 10)),
+      y = (explosion.height() / 2) + rand(80, 150) * Math.sin(2 * Math.PI * i / rand(particles - 10, particles + 10)),
+      color = rand(0,254) + ', ' + rand(0,254) + ', ' + rand(0,254), // randomize the color rgb
+        // particle element creation (could be anything other than div)
+      elm = $('<div class="particle" style="' +
+        'background-color: rgb(' + color + ') ;' +
+        'top: ' + y + 'px; ' +
+        'left: ' + x + 'px"></div>');
+
+    if (i == 0) { // no need to add the listener on all generated elements
+      // css3 animation end detection
+      elm.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
+        explosion.remove(); // remove this explosion container when animation ended
+      });
+    }
+    explosion.append(elm);
+  }
+}
+
+// get random number between min and max value
+function rand(min, max) {
+  return Math.floor(Math.random() * (max + 1)) + min;
+}
+        
+    </script>
+</body>
+</html>
