@@ -1,8 +1,9 @@
 # html-canvas-cat-generator
-A canvas-based 2D cat generator.
+A canvas-based 2D cat generator with the capability of being animated.
 
 ## Live Demo
-https://ai8hyf.github.io/html-canvas-cat-generator/
+Cat Generator: https://ai8hyf.github.io/html-canvas-cat-generator/index
+Cat Animator: https://ai8hyf.github.io/html-canvas-cat-generator/feed
 
 ## Usage
 Include the following libraries:
